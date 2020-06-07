@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "paths": [
+    "factoryDeploymentTemplate",
+    "factoryDeploymentParametersTemplate"
+  ],
+  "parameters": {
+    "location": {
+      "value": "[parameters('location')]"
+    },
+    "factoryName": {
+      "value": "[parameters('factoryName')]"
+    },
+    "backupAscTableNames": {
+      "value": "[parameters('backupAscTableNames')]"
+    },
+    "backupStorageName": {
+      "value": "[parameters('backupStorageName')]"
+    },
+    "restoreStorageName": {
+      "value": "[parameters('restoreStorageName')]"
+    },
+    "factoryDeploymentTemplate": {
+      "value": "[parameters('factoryDeploymentTemplate')]"
+    },
+    "factoryId": {
+      "value": "[variables('factoryId')]"
+    },
+    "backupStorageId": {
+      "value": "[variables('backupStorageId')]"
+    },
+    "restoreStorageId": {
+      "value": "[variables('restoreStorageId')]"
+    },
+    "backupStorageLink": {
+      "value": "[variables('backupStorageLink')]"
+    },
+    "restoreStorageLink": {
+      "value": "[variables('restoreStorageLink')]"
+    },
+    "backupStorageContainerForLogicApp": {
+      "value": "[variables('backupStorageContainerForLogicApp')]"
+    },
+    "webApiConnectionId": {
+      "value": "[variables('webApiConnectionId')]"
+    },
+    "webApiConnectionName": {
+      "value": "[variables('webApiConnectionName')]"
+    },
+    "backupStorageContainer": {
+      "value": "[variables('backupStorageContainer')]"
+    },
+    "restoreStorageContainer": {
+      "value": "[variables('restoreStorageContainer')]"
+    },
+    "blobDatasetName": {
+      "value": "[variables('blobDatasetName')]"
+    },
+    "datasetName": {
+      "value": "[variables('datasetName')]"
+    },
+    "backupPipelineName": {
+      "value": "[variables('backupPipelineName')]"
+    },
+    "restorePipelineName": {
+      "value": "[variables('restorePipelineName')]"
+    },
+    "logicAppName": {
+      "value": "[variables('restoreStorageName')]"
+    }
+  }
+}
