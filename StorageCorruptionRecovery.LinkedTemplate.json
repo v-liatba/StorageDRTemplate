@@ -27,7 +27,7 @@
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
       "name": "[variables('factoryName')]",
-      "location": "[parameters('location')]",
+      "location": "East US",
       "identity": {
         "type": "SystemAssigned"
       }
