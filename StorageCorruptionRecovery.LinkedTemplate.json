@@ -4,8 +4,8 @@
   "parameters": {
     "location": { "type": "array" },
     "backupAscTableNames": { "type": "array" },
-    "backupStorageName": : { "type": "string" },
-    "restoreStorageName": : { "type": "string" },
+    "backupStorageName": { "type": "string" },
+    "restoreStorageName": { "type": "string" },
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
