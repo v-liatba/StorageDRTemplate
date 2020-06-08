@@ -40,17 +40,9 @@
         "annotations": [],
         "type": "AzureStorage",
         "typeProperties": {
-          "connectionString": "\"[concat('DefaultEndpointsProtocol=https;AccountName=', variables('backupStorageName'),",
-          ";BlobEndpoint=",
-          "reference(variables('backupStorageId')",
-          "'2019-04-01').primaryEndpoints.blob",
-          ";AccountKey=",
-          "listKeys(variables('backupStorageId')",
-          "'2019-04-01').keys" [ 0 ]
-          ".value)",
-          : null,
-          ]
-          "\""
+          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),
+           ';BlobEndpoint=', reference(variables('backupStorageId'), '2019-04-01').primaryEndpoints.blob,
+           ';AccountKey=',listKeys(variables('backupStorageId'), '2019-04-01').keys[0].value)]"
         }
       }
     },
@@ -62,17 +54,9 @@
         "annotations": [],
         "type": "AzureStorage",
         "typeProperties": {
-          "connectionString": "\"[concat('DefaultEndpointsProtocol=https;AccountName=', variables('restoreStorageName'),",
-          ";BlobEndpoint=",
-          "reference(variables('restoreStorageId')",
-          "'2019-04-01').primaryEndpoints.blob",
-          ";AccountKey=",
-          "listKeys(variables('restoreStorageId')",
-          "'2019-04-01').keys" [ 0 ]
-          ".value)",
-          : null,
-          ]
-          "\""
+          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),
+          ';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,
+          ';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
         }
       }
     },
