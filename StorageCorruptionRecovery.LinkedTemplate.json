@@ -1,5 +1,4 @@
 {
-  {
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
@@ -8,14 +7,14 @@
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
-    "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]",
+    "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
     "backupStorageId": "[concat('Microsoft.Storage/storageAccounts', variables('backupStorageName'))]",
     "restoreStorageId": "[concat('Microsoft.Storage/storageAccounts', variables('restoreStorageName'))]",
     "backupStorageLink": "[concat(variables('backupStorageName'),'_link')]",
     "restoreStorageLink": "[concat(variables('restoreStorageName'),'_link')]",
     "factoryName": "datafactory",
-    "backupStorageName": "backupStorage"
-    "restoreStorageName": "restoreStorage"
+    "backupStorageName": "backupStorage",
+    "restoreStorageName": "restoreStorage",
     "backupStorageContainer": "backupsContainer",
     "restoreStorageContainer": "restoreContainer",
     "blobDatasetName": "blobDataset",
@@ -41,9 +40,17 @@
         "annotations": [],
         "type": "AzureStorage",
         "typeProperties": {
-          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('backupStorageName'),
-           ';BlobEndpoint=', reference(variables('backupStorageId'), '2019-04-01').primaryEndpoints.blob,
-           ';AccountKey=',listKeys(variables('backupStorageId'), '2019-04-01').keys[0].value)]"
+          "connectionString": "\"[concat('DefaultEndpointsProtocol=https;AccountName=', variables('backupStorageName'),",
+          ";BlobEndpoint=",
+          "reference(variables('backupStorageId')",
+          "'2019-04-01').primaryEndpoints.blob",
+          ";AccountKey=",
+          "listKeys(variables('backupStorageId')",
+          "'2019-04-01').keys" [ 0 ]
+          ".value)",
+          : null,
+          ]
+          "\""
         }
       }
     },
@@ -55,9 +62,17 @@
         "annotations": [],
         "type": "AzureStorage",
         "typeProperties": {
-          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('restoreStorageName'),
-          ';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,
-          ';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
+          "connectionString": "\"[concat('DefaultEndpointsProtocol=https;AccountName=', variables('restoreStorageName'),",
+          ";BlobEndpoint=",
+          "reference(variables('restoreStorageId')",
+          "'2019-04-01').primaryEndpoints.blob",
+          ";AccountKey=",
+          "listKeys(variables('restoreStorageId')",
+          "'2019-04-01').keys" [ 0 ]
+          ".value)",
+          : null,
+          ]
+          "\""
         }
       }
     },
