@@ -9,7 +9,7 @@
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
-    "factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]",
+    "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
     "backupStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('backupStorageName'))]",
     "restoreStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
     "backupStorageLink": "[concat(parameters('backupStorageName'),'_link')]",
@@ -17,6 +17,7 @@
     "backupStorageContainerForLogicApp": "[concat('/', variables('backupstorageContainer'))]",
     "webApiConnectionId": "[concat(subscription().id, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', 'azureblob')]",
     "webApiConnectionName": "[concat(parameters('backupStorageName'), '-storage-webapi-connection')]",
+    "factoryName": "storageDataFactory",
     "backupStorageContainer": "backupsContainer",
     "restoreStorageContainer": "restoreContainer",
     "blobDatasetName": "blobDataset",
