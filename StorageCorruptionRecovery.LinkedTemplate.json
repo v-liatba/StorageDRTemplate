@@ -4,9 +4,10 @@
   "parameters": {
     "location": { "type": "array" },
     "backupAscTableNames": { "type": "array" },
-    "backupStorageName": { "type": "string" },
-    "restoreStorageName": { "type": "string" },
-    "factoryDeploymentTemplate": { "type": "string" }
+    "backupStorageId": { "type": "array" },
+    "backupStorageName": { "type": "array" },
+    "restoreStorageName": { "type": "array" },
+    "factoryDeploymentTemplate": { "type": "array" }
   },
   "variables": {
     "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
