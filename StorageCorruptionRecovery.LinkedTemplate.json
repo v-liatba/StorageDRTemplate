@@ -10,8 +10,8 @@
   },
   "variables": {
     "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
-    "backupStorageId": "[concat('Microsoft.Storage/storageAccounts', parameters('backupStorageName'))]",
-    "restoreStorageId": "[concat('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
+    "backupStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('backupStorageName'))]",
+    "restoreStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
     "backupStorageLink": "[concat(parameters('backupStorageName'),'_link')]",
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "factoryName": "datafactory",
@@ -41,7 +41,6 @@
         "type": "AzureStorage",
         "typeProperties": {
           "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),
-           ';BlobEndpoint=', reference(variables('backupStorageId'), '2019-04-01').primaryEndpoints.blob,
            ';AccountKey=',listKeys(variables('backupStorageId'), '2019-04-01').keys[0].value)]"
         }
       }
