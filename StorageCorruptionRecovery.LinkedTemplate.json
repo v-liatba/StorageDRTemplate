@@ -40,7 +40,11 @@
           "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),
            ';AccountKey=',listKeys(variables('backupStorageId'), '2019-04-01').keys[0].value)]"
         }
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('backupStorageName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -54,7 +58,11 @@
           ';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,
           ';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
         }
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('restoreStorageName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -81,7 +89,11 @@
           "frequency": "Hour",
           "interval": 1
         }
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -112,7 +124,11 @@
           }
         },
         "schema": {}
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -142,7 +158,11 @@
             "interval": 1
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -169,7 +189,11 @@
           "frequency": "Hour",
           "interval": 1
         }
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
@@ -236,7 +260,12 @@
         "end": "2118-10-14T00:00:00Z",
         "isPaused": "false",
         "pipelineMode": "scheduled"
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('restoreStorageName'), '_', variables('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', variables('blobDatasetName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
@@ -296,7 +325,12 @@
         "end": "2018-10-14T00:00:00Z",
         "isPaused": true,
         "pipelineMode": "OneTime"
-      }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', variables('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', variables('blobDatasetName'))]"
+      ]
     }
   ]
 }
