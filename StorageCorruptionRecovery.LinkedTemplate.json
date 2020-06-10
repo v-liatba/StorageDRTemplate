@@ -27,7 +27,7 @@
     "restoreStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
     "backupStorageLink": "[concat(parameters('backupStorageName'),'_link')]",
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
-    "factoryName": "storageDataFactory",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
