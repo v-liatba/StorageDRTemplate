@@ -210,12 +210,11 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "description": "[concat('Periodic Copy activity from ', parameters('backupAscTableNames')[copyIndex()].name, ' table of global storage to a blob')]",
+        "description": "[concat('Periodic Copy activity from ', parameters('backupAscTableNames')[copyIndex()].name, ' table of storage to a blob')]",
         "activities": [
           {
             "name": "CopyFromTableToBlobStorage",
             "type": "Copy",
-            "dependsOn": [],
             "policy": {
               "timeout": "1.00:00:00",
               "retry": 3,
@@ -268,7 +267,9 @@
         "pipelineMode": "scheduled"
       },
       "dependsOn": [
-        "[variables('factoryId')]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
@@ -285,7 +286,6 @@
           {
             "name": "RestoreFromBlobToTableStorage",
             "type": "Copy",
-            "dependsOn": [],
             "policy": {
               "timeout": "1.00:00:00",
               "concurrency": 1,
@@ -331,7 +331,9 @@
         "pipelineMode": "OneTime"
       },
       "dependsOn": [
-        "[variables('factoryId')]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     }
   ]
