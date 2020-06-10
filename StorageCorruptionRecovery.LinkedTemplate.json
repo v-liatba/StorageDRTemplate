@@ -139,7 +139,8 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_
+      _', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -332,8 +333,8 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     }
   ]
