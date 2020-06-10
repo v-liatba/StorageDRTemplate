@@ -3,6 +3,8 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": { "type": "array" },
+    "env": { "type": "array" },
+    "storagePrefix": { "type": "array" },
     "backupAscTableNames": { "type": "array" },
     "backupStorageId": { "type": "string" },
     "backupStorageName": { "type": "string" },
