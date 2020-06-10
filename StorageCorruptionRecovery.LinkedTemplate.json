@@ -332,7 +332,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
         "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     }
