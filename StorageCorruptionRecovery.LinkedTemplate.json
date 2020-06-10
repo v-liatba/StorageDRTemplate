@@ -46,7 +46,7 @@
           "type": "AzureStorage",
           "typeProperties": {
             "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),
-           ';AccountKey=',listKeys(parameters('backupStorageId'), '2019-04-01').keys[0].value)]"
+           ';AccountKey=',listKeys(parameters('backupStorageId'), '2019-04-01').keys[2].value)]"
           }
         },
         "dependsOn": [
@@ -64,7 +64,7 @@
           "typeProperties": {
             "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),
           ';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,
-          ';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
+          ';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [2].value)]"
           }
         },
         "dependsOn": [
