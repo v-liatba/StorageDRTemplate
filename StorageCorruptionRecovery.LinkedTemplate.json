@@ -268,9 +268,7 @@
         "pipelineMode": "scheduled"
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]"
+        "[variables('factoryId')]"
       ]
     },
     {
@@ -333,9 +331,7 @@
         "pipelineMode": "OneTime"
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[variables('factoryId')]"
       ]
     }
   ]
