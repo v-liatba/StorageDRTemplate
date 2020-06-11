@@ -104,7 +104,7 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -173,7 +173,7 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -250,7 +250,7 @@
             ],
             "outputs": [
               {
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
                 "type": "DatasetReference",
                 "parameters": {}
               }
@@ -269,7 +269,7 @@
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]"
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
@@ -318,7 +318,7 @@
             ],
             "outputs": [
               {
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
                 "type": "DatasetReference",
                 "parameters": {}
               }
@@ -332,7 +332,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
         "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     }
