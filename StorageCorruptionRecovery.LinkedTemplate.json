@@ -243,14 +243,14 @@
             },
             "inputs": [
               {
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('restoreStorageName'), '_', parameters('datasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
                 "type": "DatasetReference",
                 "parameters": {}
               }
             ],
             "outputs": [
               {
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('backupStorageName'), '_', parameters('blobDatasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
                 "type": "DatasetReference",
                 "parameters": {}
               }
