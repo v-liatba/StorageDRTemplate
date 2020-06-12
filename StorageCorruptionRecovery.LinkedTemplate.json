@@ -49,9 +49,8 @@
         }
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('backupStorageName'))]"
-      ]
+        "[variables('factoryId')]"
+       ]
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -65,8 +64,7 @@
         }
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('restoreStorageName'))]"
+        "[variables('factoryId')]"
       ]
     },
     {
