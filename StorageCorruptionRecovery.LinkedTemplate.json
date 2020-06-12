@@ -45,12 +45,12 @@
         "annotations": [],
         "type": "AzureTableStorage",
         "typeProperties": {
-          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),';AccountKey=', listKeys(parameters('backupStorageId'), '2019-04-01').secondaryKey, listKeys(variables('backupStorageId'), '2019-04-01').keys[2].value)]"
+          "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),';AccountKey=', listKeys(parameters('backupStorageId'), '2019-04-01').secondaryKey, listKeys(parameters('backupStorageId'), '2019-04-01').keys[2].value)]"
         }
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('backupStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('backupStorageName'))]"
       ]
     },
     {
@@ -66,7 +66,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat('Microsoft.Storage/storageAccounts/', variables('restoreStorageName'))]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('restoreStorageName'))]"
       ]
     },
     {
@@ -115,41 +115,41 @@
         "annotations": [],
         "type": "Json",
         "partitionedBy": [
-            {
-              "name": "Year",
-              "value": {
-                "type": "DateTime",
-                "date": "SliceStart",
-                "format": "yyyy"
-              }
-            },
-            {
-              "name": "Month",
-              "value": {
-                "type": "DateTime",
-                "date": "SliceStart",
-                "format": "MM"
-              }
-            },
-            {
-              "name": "Day",
-              "value": {
-                "type": "DateTime",
-                "date": "SliceStart",
-                "format": "dd"
-              }
-            },
-            {
-              "name": "Hour",
-              "value": {
-                "type": "DateTime",
-                "date": "SliceStart",
-                "format": "HH"
-              }
+          {
+            "name": "Year",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "yyyy"
             }
-          ],
-          "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-          "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
+          },
+          {
+            "name": "Month",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "MM"
+            }
+          },
+          {
+            "name": "Day",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "dd"
+            }
+          },
+          {
+            "name": "Hour",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "HH"
+            }
+          }
+        ],
+        "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
+        "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
         "typeProperties": {
           "location": {
             "type": "AzureBlobStorageLocation"
@@ -188,7 +188,7 @@
           "location": {
             "type": "AzureTableLocation",
             "tableName": "[parameters('backupAscTableNames')[copyIndex()].name]"
-           },
+          },
           "published": false,
           "external": false,
           "availability": {
@@ -216,7 +216,7 @@
           "type": "LinkedServiceReference",
           "structure": "[parameters('backupAscTableNames')[copyIndex()].schema]",
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-          "folderPath": "[variables('backupStorageContainer')]"
+          "folderPath": "[parameters('backupStorageContainer')]"
         },
         "annotations": [],
         "type": "Json",
@@ -324,12 +324,12 @@
             "name": "RestoreFromBlobToTableStorage",
             "type": "Copy",
             "policy": {
-                "timeout": "1.00:00:00",
-                "retry": 3,
-                "concurrency": 1,
-                "executionPriorityOrder": "NewestFirst",
-                "style": "StartOfInterval"
-              },
+              "timeout": "1.00:00:00",
+              "retry": 3,
+              "concurrency": 1,
+              "executionPriorityOrder": "NewestFirst",
+              "style": "StartOfInterval"
+            },
             "userProperties": [],
             "typeProperties": {
               "source": {
