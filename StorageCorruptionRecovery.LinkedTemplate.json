@@ -341,7 +341,7 @@
           {
             "pipelineReference": {
               "type": "PipelineReference",
-              "referenceName": "AutoProvisioningStatus_backup_pipeline"
+              "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
             }
           }
         ]
@@ -428,7 +428,7 @@
           {
             "pipelineReference": {
               "type": "PipelineReference",
-              "referenceName": "AutoProvisioningStatus_recovery_pipeline"
+              "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
             }
           }
         ]
