@@ -146,7 +146,7 @@
               }
             }
           ],
-          "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
+          "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_liatbackup.json')]",
           "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
           "typeProperties": {
             "location": {
@@ -213,7 +213,7 @@
             "referenceName": "[variables('restoreStorageLink')]",
             "type": "LinkedServiceReference",
             "structure": "[parameters('backupAscTableNames')[copyIndex()].schema]",
-            "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
+            "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_liatbackup.json')]",
             "folderPath": "[parameters('backupStorageContainer')]"
           },
           "annotations": [],
