@@ -324,6 +324,10 @@
       "type": "Microsoft.DataFactory/factories/triggers",
       "apiVersion": "2018-06-01",
       "name": "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,variables('backupPipelineTriggerName'))]",
+      "copy": {
+        "name": "backupPipelineCopy",
+        "count": "[length(parameters('backupAscTableNames'))]"
+      },
       "properties": {
         "type": "ScheduleTrigger",
         "typeProperties": {
