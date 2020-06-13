@@ -178,7 +178,7 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
       "copy": {
         "name": "datasetTableCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -223,7 +223,7 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -331,7 +331,7 @@
       "properties": {
         "type": "ScheduleTrigger",
         "typeProperties": {
-          "endTime": "2021-06-13T13:38:49.2603387Z",
+          "endTime": "2121-06-13T13:38:49.2603387Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
@@ -386,13 +386,13 @@
             "inputs": [
               {
                 "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
               }
             ],
             "outputs": [
               {
                 "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]"
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]"
               }
             ]
           }
@@ -402,8 +402,8 @@
         },
         "dependsOn": [
           "[variables('factoryId')]",
-          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_recoveryInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
@@ -418,7 +418,7 @@
       "properties": {
         "type": "ScheduleTrigger",
         "typeProperties": {
-          "endTime": "2021-06-13T13:02:46.7695857Z",
+          "endTime": "2120-06-13T13:02:46.7695857Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
