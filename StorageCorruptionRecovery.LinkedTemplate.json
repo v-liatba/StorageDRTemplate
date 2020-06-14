@@ -140,7 +140,6 @@
           "type": "JsonFormat"
         }
       },
-      "published": false,
       "external": false,
       "availability": {
         "frequency": "Hour",
