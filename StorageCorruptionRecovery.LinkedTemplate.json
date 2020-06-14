@@ -127,62 +127,65 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "AzureBlob",
         "linkedServiceName": {
+          "referenceName": "[variables('restoreStorageLink')]",
           "type": "LinkedServiceReference",
-          "referenceName": "[variables('restoreStorageLink')]"
+          "structure": "[parameters('backupAscTableNames')[copyIndex()].schema]"
         },
-        "typeProperties": {
-          "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-          "folderPath": {
-            "type": "Expression",
-            "value": "@concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, formatDateTime(dataset().SliceStart, 'yyyy'), '/', formatDateTime(dataset().SliceStart, 'MM'), '/', formatDateTime(dataset().SliceStart, 'dd'), '/', formatDateTime(dataset().SliceStart, 'HH'))"
-          },
-          "format": {
-            "type": "JsonFormat"
-          }
-        },
-        "parameters": {
-          "SliceStart": {
-            "value": "@pipeline().Pipeline",
-            "type": "Expression"
-          },
-          "backupStorageContainer": {
-            "value": "[parameters('backupStorageContainer')]",
-            "type": "string"
-          },
-          "backupAscTableNames": {
-            "value": "[parameters('backupAscTableNames')]",
-            "type": "string"
-          }
-        },
-          "structure": [
-            {
-              "name": "PartitionKey",
-              "type": "String"
-            },
-            {
-              "name": "RowKey",
-              "type": "String"
-            },
-            {
-              "name": "Timestamp",
-              "type": "DateTimeOffset"
-            },
-            {
-              "name": "AutoProvision",
-              "type": "Boolean"
-            },
-            {
-              "name": "SubscriptionId",
-              "type": "Guid"
+        "annotations": [],
+        "type": "Json",
+        "partitionedBy": [
+          {
+            "name": "Year",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "yyyy"
             }
-          ]
-        },
-        "dependsOn": [
-          "[variables('factoryId')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-        ]
+          },
+          {
+            "name": "Month",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "MM"
+            }
+          },
+          {
+            "name": "Day",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "dd"
+            }
+          },
+          {
+            "name": "Hour",
+            "value": {
+              "type": "DateTime",
+              "date": "SliceStart",
+              "format": "HH"
+            }
+          }
+        ],
+        "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_liatbackup.json')]",
+        "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
+        "typeProperties": {
+          "location": {
+            "type": "AzureBlobStorageLocation"
+          },
+          "published": false,
+          "external": false,
+          "availability": {
+            "frequency": "Hour",
+            "interval": 1
+          }
+        }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
