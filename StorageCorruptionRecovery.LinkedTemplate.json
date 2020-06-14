@@ -134,10 +134,7 @@
         },
         "typeProperties": {
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-          "folderPath": {
-            "type": "Expression",
-            "value": "@concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, formatDateTime(dataset().SliceStart, 'yyyy'), '/', formatDateTime(dataset().SliceStart, 'MM'), '/', formatDateTime(dataset().SliceStart, 'dd'), '/', formatDateTime(dataset().SliceStart, 'HH'))"
-          },
+          "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
           "format": {
             "type": "JsonFormat"
           }
@@ -353,7 +350,7 @@
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
       "apiVersion": "2018-06-01",
-      "name": "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]",
+      "name": "[concat(variables('factoryName'), '/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
