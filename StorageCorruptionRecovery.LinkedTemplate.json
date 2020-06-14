@@ -144,32 +144,38 @@
         },
         "parameters": {
           "SliceStart": {
-            "type": "String"
-          }
+            "value": "@pipeline().Pipeline",
+            "type": "string"
+          },
+          "backupStorageContainer": {
+            "type": "string"
+          },
+          "backupAscTableNames": {
+            "type": "string"
+          },
+          "structure": [
+            {
+              "name": "PartitionKey",
+              "type": "String"
+            },
+            {
+              "name": "RowKey",
+              "type": "String"
+            },
+            {
+              "name": "Timestamp",
+              "type": "DateTimeOffset"
+            },
+            {
+              "name": "AutoProvision",
+              "type": "Boolean"
+            },
+            {
+              "name": "SubscriptionId",
+              "type": "Guid"
+            }
+          ]
         },
-        "structure": [
-          {
-            "name": "PartitionKey",
-            "type": "String"
-          },
-          {
-            "name": "RowKey",
-            "type": "String"
-          },
-          {
-            "name": "Timestamp",
-            "type": "DateTimeOffset"
-          },
-          {
-            "name": "AutoProvision",
-            "type": "Boolean"
-          },
-          {
-            "name": "SubscriptionId",
-            "type": "Guid"
-          }
-        ]
-      },
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
