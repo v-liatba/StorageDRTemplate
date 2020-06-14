@@ -140,10 +140,6 @@
           "type": "JsonFormat"
         }
       },
-      "availability": {
-        "frequency": "Hour",
-        "interval": 1
-      },
       "schema": [
         {
           "name": "PartitionKey",
