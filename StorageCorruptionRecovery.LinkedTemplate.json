@@ -128,51 +128,16 @@
       },
       "properties": {
         "linkedServiceName": {
-          "referenceName": "[variables('restoreStorageLink')]",
-          "type": "LinkedServiceReference",
-          "structure": "[parameters('backupAscTableNames')[copyIndex()].schema]"
+          "referenceName": "[variables('backupStorageLink')]",
+          "type": "LinkedServiceReference"
         },
         "annotations": [],
         "type": "Json",
-        "partitionedBy": [
-          {
-            "name": "Year",
-            "value": {
-              "type": "DateTime",
-              "date": "SliceStart",
-              "format": "yyyy"
-            }
-          },
-          {
-            "name": "Month",
-            "value": {
-              "type": "DateTime",
-              "date": "SliceStart",
-              "format": "MM"
-            }
-          },
-          {
-            "name": "Day",
-            "value": {
-              "type": "DateTime",
-              "date": "SliceStart",
-              "format": "dd"
-            }
-          },
-          {
-            "name": "Hour",
-            "value": {
-              "type": "DateTime",
-              "date": "SliceStart",
-              "format": "HH"
-            }
-          }
-        ],
-        "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_liatbackup.json')]",
-        "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]",
         "typeProperties": {
           "location": {
-            "type": "AzureBlobStorageLocation"
+            "type": "AzureBlobStorageLocation",
+            "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
+            "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]"
           },
           "published": false,
           "external": false,
@@ -180,8 +145,30 @@
             "frequency": "Hour",
             "interval": 1
           }
-        }
-      },
+        },
+        "schema": [
+            {
+              "name": "PartitionKey",
+              "type": "String"
+            },
+            {
+              "name": "RowKey",
+              "type": "String"
+            },
+            {
+              "name": "Timestamp",
+              "type": "DateTimeOffset"
+            },
+            {
+              "name": "AutoProvision",
+              "type": "Boolean"
+            },
+            {
+              "name": "SubscriptionId",
+              "type": "Guid"
+            }
+        ]
+        },
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
