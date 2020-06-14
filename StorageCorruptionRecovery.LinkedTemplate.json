@@ -176,11 +176,11 @@
             }
           ]
         },
-      "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-      ]
-    },
+        "dependsOn": [
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        ]
+      },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
