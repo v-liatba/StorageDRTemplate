@@ -145,14 +145,17 @@
         "parameters": {
           "SliceStart": {
             "value": "@pipeline().Pipeline",
-            "type": "string"
+            "type": "Expression"
           },
           "backupStorageContainer": {
+            "value": "[parameters('backupStorageContainer')]",
             "type": "string"
           },
           "backupAscTableNames": {
+            "value": "[parameters('backupAscTableNames')]",
             "type": "string"
-          },
+          }
+        },
           "structure": [
             {
               "name": "PartitionKey",
@@ -180,7 +183,6 @@
           "[variables('factoryId')]",
           "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
         ]
-      }
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
