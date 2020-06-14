@@ -139,11 +139,6 @@
             "type": "JsonFormat"
           }
         },
-        "parameters": {
-          "SliceStart": {
-            "type": "String"
-          }
-        },
         "structure": [
           {
             "name": "PartitionKey",
