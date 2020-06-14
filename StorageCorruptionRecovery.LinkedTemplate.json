@@ -140,7 +140,7 @@
           "type": "JsonFormat"
         }
       },
-      "schema": [
+      "structure": [
         {
           "name": "PartitionKey",
           "type": "String"
