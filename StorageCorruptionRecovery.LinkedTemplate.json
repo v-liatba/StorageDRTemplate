@@ -127,48 +127,47 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
+        "type": "AzureBlob",
         "linkedServiceName": {
-          "referenceName": "[variables('backupStorageLink')]",
-          "type": "LinkedServiceReference"
+          "type": "LinkedServiceReference",
+          "referenceName": "[variables('restoreStorageLink')]"
         },
-        "annotations": [],
-        "type": "Json",
         "typeProperties": {
-          "location": {
-            "type": "AzureBlobStorageLocation",
-            "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-            "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]"
-          },
-          "published": false,
-          "external": false,
-          "availability": {
-            "frequency": "Hour",
-            "interval": 1
-          }
+          "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
+          "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]"
         },
-        "schema": [
-            {
-              "name": "PartitionKey",
-              "type": "String"
-            },
-            {
-              "name": "RowKey",
-              "type": "String"
-            },
-            {
-              "name": "Timestamp",
-              "type": "DateTimeOffset"
-            },
-            {
-              "name": "AutoProvision",
-              "type": "Boolean"
-            },
-            {
-              "name": "SubscriptionId",
-              "type": "Guid"
-            }
-        ]
+        "format": {
+          "type": "JsonFormat"
+        }
+      },
+      "published": false,
+      "external": false,
+      "availability": {
+        "frequency": "Hour",
+        "interval": 1
+      },
+      "schema": [
+        {
+          "name": "PartitionKey",
+          "type": "String"
         },
+        {
+          "name": "RowKey",
+          "type": "String"
+        },
+        {
+          "name": "Timestamp",
+          "type": "DateTimeOffset"
+        },
+        {
+          "name": "AutoProvision",
+          "type": "Boolean"
+        },
+        {
+          "name": "SubscriptionId",
+          "type": "Guid"
+        }
+      ],
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
