@@ -233,7 +233,7 @@
             "type": "JsonFormat"
           }
         },
-        "structure": [
+        "partitionedBy": [
           {
             "name": "PartitionKey",
             "type": "String"
