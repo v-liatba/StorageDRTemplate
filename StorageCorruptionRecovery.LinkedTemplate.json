@@ -140,26 +140,38 @@
           "type": "JsonFormat"
         }
       },
-      "structure": [
+      "partitionedBy": [
         {
-          "name": "PartitionKey",
-          "type": "String"
+          "name": "Year",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "yyyy"
+          }
         },
         {
-          "name": "RowKey",
-          "type": "String"
+          "name": "Month",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "MM"
+          }
         },
         {
-          "name": "Timestamp",
-          "type": "DateTimeOffset"
+          "name": "Day",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "dd"
+          }
         },
         {
-          "name": "AutoProvision",
-          "type": "Boolean"
-        },
-        {
-          "name": "SubscriptionId",
-          "type": "Guid"
+          "name": "Hour",
+          "value": {
+            "type": "DateTime",
+            "date": "SliceStart",
+            "format": "HH"
+          }
         }
       ],
       "dependsOn": [
@@ -233,7 +245,7 @@
             "type": "JsonFormat"
           }
         },
-        "partitionedBy": [
+        "structure": [
           {
             "name": "PartitionKey",
             "type": "String"
