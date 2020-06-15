@@ -134,46 +134,48 @@
         },
         "typeProperties": {
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
-          "folderPath": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name,'/{Year}/{Month}/{Day}/{Hour}')]"
+          "folderPath": {
+            "type": "Expression",
+            "value": "@concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, formatDateTime(dataset().SliceStart, 'yyyy'), '/', formatDateTime(dataset().SliceStart, 'MM'), '/', formatDateTime(dataset().SliceStart, 'dd'), '/', formatDateTime(dataset().SliceStart, 'HH'))"
+          },
+          "format": {
+            "type": "JsonFormat"
+          }
         },
-        "format": {
-          "type": "JsonFormat"
-        }
+        "parameters": {
+          "SliceStart": {
+            "type": "string"
+          },
+          "backupStorageContainer": {
+            "type": "string"
+          },
+          "backupAscTableNames": {
+            "type": "string"
+          }
+        },
+        "structure": [
+          {
+            "name": "PartitionKey",
+            "type": "String"
+          },
+          {
+            "name": "RowKey",
+            "type": "String"
+          },
+          {
+            "name": "Timestamp",
+            "type": "DateTimeOffset"
+          },
+          {
+            "name": "AutoProvision",
+            "type": "Boolean"
+          },
+          {
+            "name": "SubscriptionId",
+            "type": "Guid"
+          }
+        ]
       },
-      "partitionedBy": [
-        {
-          "name": "Year",
-          "value": {
-            "type": "DateTime",
-            "date": "SliceStart",
-            "format": "yyyy"
-          }
-        },
-        {
-          "name": "Month",
-          "value": {
-            "type": "DateTime",
-            "date": "SliceStart",
-            "format": "MM"
-          }
-        },
-        {
-          "name": "Day",
-          "value": {
-            "type": "DateTime",
-            "date": "SliceStart",
-            "format": "dd"
-          }
-        },
-        {
-          "name": "Hour",
-          "value": {
-            "type": "DateTime",
-            "date": "SliceStart",
-            "format": "HH"
-          }
-        }
-      ],
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
