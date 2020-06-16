@@ -39,7 +39,7 @@
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
       "name": "[variables('factoryName')]",
-      "location": "East US"
+      "location": "[resourceGroup().location]"
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -459,7 +459,7 @@
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
       "name": "[parameters('webApiConnectionName')]",
-      "location": "[parameters('alternativeLocation'),resourceGroup().location]",
+      "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[parameters('webApiConnectionId')]"
