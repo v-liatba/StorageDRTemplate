@@ -4,6 +4,7 @@
   "parameters": {
     "alternativeLocation": { "type": "string" },
     "env": { "type": "string" },
+    "location": { "type": "string" },
     "storagePrefix": { "type": "string" },
     "backupAscTableNames": { "type": "array" },
     "backupStorageId": { "type": "string" },
