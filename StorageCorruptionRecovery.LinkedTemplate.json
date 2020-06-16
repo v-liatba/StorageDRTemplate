@@ -3,6 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": { "type": "array" },
+    "alternativeLocation": { "type": "string" },
     "env": { "type": "string" },
     "storagePrefix": { "type": "string" },
     "backupAscTableNames": { "type": "array" },
@@ -20,6 +21,7 @@
     "logicAppName": { "type": "string" },
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
+    "actionGroupShortName": { "type": "string" },
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
@@ -29,7 +31,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "corruptionRecovery-df",
+    "factoryName": "glob-rp-corruptionRecoveryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -435,6 +437,156 @@
       },
       "dependsOn": [
         "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Insights/actionGroups",
+      "apiVersion": "2018-03-01",
+      "name": "[parameters('actionGroupName')]",
+      "location": "global",
+      "properties": {
+        "groupShortName": "[parameters('actionGroupShortName')]",
+        "enabled": true,
+        "emailReceivers": [
+          {
+            "name": "RomeCoreEmail",
+            "emailAddress": "romeeng@microsoft.com"
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('webApiConnectionName')]",
+      "location": "[parameters('alternativeLocation'),resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[parameters('webApiConnectionId')]"
+        },
+        "displayName": "[parameters('webApiConnectionName')]",
+        "parameterValues": {
+          "accountName": "[parameters('backupStorageName')]",
+          "accessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('backupStorageName')), '2015-06-15').key2]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[parameters('logicAppName')]",
+      "location": "[parameters('location')]",
+      "tags": {},
+      "properties": {
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2017-07-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "actions": {
+            "For_each": {
+              "type": "Foreach",
+              "foreach": "@body('List_blobs')?['value']",
+              "description": "Scan all blobs in this folder",
+              "actions": {
+                "Condition": {
+                  "type": "If",
+                  "description": "Check LastModified timestamp and whether older than the expiration age variable",
+                  "expression": "@less(ticks(items('For_each')?['LastModified']), ticks(addDays(utcnow(), variables('ExpirationAgeInDays'))))",
+                  "actions": {
+                    "Delete_blob": {
+                      "description": "If blob is older than the expiration age, delete it",
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['azureblob']['connectionId']"
+                          }
+                        },
+                        "method": "delete",
+                        "path": "/datasets/default/files/@{encodeURIComponent(encodeURIComponent(items('For_each')?['Id']))}"
+                      },
+                      "runAfter": {}
+                    }
+                  },
+                  "runAfter": {}
+                }
+              },
+              "runAfter": {
+                "List_blobs": [
+                  "Succeeded"
+                ]
+              }
+            },
+            "List_blobs": {
+              "type": "ApiConnection",
+              "inputs": {
+                "host": {
+                  "connection": {
+                    "name": "@parameters('$connections')['azureblob']['connectionId']"
+                  }
+                },
+                "method": "get",
+                "path": "[concat('/datasets/default/foldersV2/@{encodeURIComponent(encodeURIComponent(''', parameters('backupStorageContainerForLogicApp'), '''))}')]",
+                "queries": {
+                  "useFlatListing": true
+                }
+              },
+              "runAfter": {
+                "Set_expiration_age_variable_": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "paginationPolicy": {
+                  "minimumItemCount": 100000
+                }
+              }
+            },
+            "Set_expiration_age_variable_": {
+              "description": "A variable to configure the auto expiration age in days. Configured in negative number. Default is -30 (30 days old).",
+              "type": "InitializeVariable",
+              "inputs": {
+                "variables": [
+                  {
+                    "name": "ExpirationAgeInDays",
+                    "type": "Integer",
+                    "value": -30
+                  }
+                ]
+              },
+              "runAfter": {}
+            }
+          },
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "Recurrence": {
+              "type": "Recurrence",
+              "recurrence": {
+                "frequency": "Day",
+                "interval": 1
+              }
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "azureblob": {
+                "id": "[parameters('webApiConnectionId')]",
+                "connectionId": "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]",
+                "connectionName": "[parameters('webApiConnectionName')]"
+              }
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]"
       ]
     }
   ]
