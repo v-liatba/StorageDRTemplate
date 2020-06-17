@@ -19,7 +19,7 @@
     "logicAppName": { "type": "string" },
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
-    actionGroupShortName: { "type": "string" },
+    "actionGroupShortName": { "type": "string" },
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
@@ -148,33 +148,33 @@
             "type": "Expression"
           }
         },
-          "structure": [
-            {
-              "name": "PartitionKey",
-              "type": "String"
-            },
-            {
-              "name": "RowKey",
-              "type": "String"
-            },
-            {
-              "name": "Timestamp",
-              "type": "DateTimeOffset"
-            },
-            {
-              "name": "AutoProvision",
-              "type": "Boolean"
-            },
-            {
-              "name": "SubscriptionId",
-              "type": "Guid"
-            }
-          ]
-        },
-        "dependsOn": [
-          "[variables('factoryId')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        "structure": [
+          {
+            "name": "PartitionKey",
+            "type": "String"
+          },
+          {
+            "name": "RowKey",
+            "type": "String"
+          },
+          {
+            "name": "Timestamp",
+            "type": "DateTimeOffset"
+          },
+          {
+            "name": "AutoProvision",
+            "type": "Boolean"
+          },
+          {
+            "name": "SubscriptionId",
+            "type": "Guid"
+          }
         ]
+      },
+      "dependsOn": [
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
