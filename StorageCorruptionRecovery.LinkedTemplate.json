@@ -37,7 +37,7 @@
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
       "name": "[variables('factoryName')]",
-      "location": "[resourceGroup().location]"
+      "location": "East US" 
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
