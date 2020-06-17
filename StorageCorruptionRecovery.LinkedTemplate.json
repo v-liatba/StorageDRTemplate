@@ -2,6 +2,7 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "location": { "type": "array" },
     "env": { "type": "string" },
     "storagePrefix": { "type": "string" },
     "backupAscTableNames": { "type": "array" },
@@ -19,7 +20,6 @@
     "logicAppName": { "type": "string" },
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
-    "actionGroupShortName": { "type": "string" },
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "glob-rp-corruptionRecoveryV2-test",
+    "factoryName": "corruptionRecovery-df",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -37,7 +37,7 @@
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
       "name": "[variables('factoryName')]",
-      "location": "East US" 
+      "location": "East US"
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -136,7 +136,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, @concat(formatDateTime(dataset().SliceStart, 'yyyy'), '/', formatDateTime(dataset().SliceStart, 'MM'), '/', formatDateTime(dataset().SliceStart, 'dd'), '/', formatDateTime(dataset().SliceStart, 'HH'))"
+            "value": "@concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, formatDateTime(dataset().SliceStart, 'yyyy'), '/', formatDateTime(dataset().SliceStart, 'MM'), '/', formatDateTime(dataset().SliceStart, 'dd'), '/', formatDateTime(dataset().SliceStart, 'HH'))"
           },
           "format": {
             "type": "JsonFormat"
@@ -144,7 +144,7 @@
         },
         "parameters": {
           "SliceStart": {
-            "type": "string"
+            "type": "String"
           }
         },
         "structure": [
@@ -436,38 +436,6 @@
       "dependsOn": [
         "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
-    },
-    {
-      "type": "Microsoft.Insights/actionGroups",
-      "apiVersion": "2018-03-01",
-      "name": "[parameters('actionGroupName')]",
-      "location": "global",
-      "properties": {
-        "groupShortName": "[parameters('actionGroupShortName')]",
-        "enabled": true,
-        "emailReceivers": [
-          {
-            "name": "RomeCoreEmail",
-            "emailAddress": "romeeng@microsoft.com"
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.Web/connections",
-      "apiVersion": "2016-06-01",
-      "name": "[parameters('webApiConnectionName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "api": {
-          "id": "[parameters('webApiConnectionId')]"
-        },
-        "displayName": "[parameters('webApiConnectionName')]",
-        "parameterValues": {
-          "accountName": "[parameters('backupStorageName')]",
-          "accessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('backupStorageName')), '2015-06-15').key2]"
-        }
-      }
     }
   ]
 }
