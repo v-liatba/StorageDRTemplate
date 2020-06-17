@@ -2,9 +2,10 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "alternativeLocation": { "type": "string" },
     "env": { "type": "string" },
-    "location": { "type": "string" },
+    "location": {
+    "defaultValue": "[resourceGroup().location]"
+     },
     "storagePrefix": { "type": "string" },
     "backupAscTableNames": { "type": "array" },
     "backupStorageId": { "type": "string" },
@@ -39,7 +40,7 @@
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
       "name": "[variables('factoryName')]",
-      "location": "[resourceGroup().location]"
+      "location": "[parameters('location')]"
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -459,7 +460,7 @@
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
       "name": "[parameters('webApiConnectionName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "properties": {
         "api": {
           "id": "[parameters('webApiConnectionId')]"
@@ -475,7 +476,7 @@
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
       "name": "[parameters('logicAppName')]",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('location')]",
       "tags": {},
       "properties": {
         "definition": {
