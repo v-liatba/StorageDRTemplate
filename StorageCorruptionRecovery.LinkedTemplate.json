@@ -457,7 +457,7 @@
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
       "name": "[parameters('webApiConnectionName')]",
-      "location": "East US",
+      "location": "[resourceGroup().location]",
       "properties": {
         "api": {
           "id": "[parameters('webApiConnectionId')]"
