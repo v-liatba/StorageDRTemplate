@@ -19,6 +19,7 @@
     "logicAppName": { "type": "string" },
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
+    "actionGroupShortName": { "type": "string" },
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
