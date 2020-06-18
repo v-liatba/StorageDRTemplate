@@ -453,6 +453,22 @@
           }
         ]
       }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[parameters('webApiConnectionName')]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "api": {
+          "id": "[parameters('webApiConnectionId')]"
+        },
+        "displayName": "[parameters('webApiConnectionName')]",
+        "parameterValues": {
+          "accountName": "[parameters('backupStorageName')]",
+          "accessKey": "[listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('backupStorageName')), '2015-06-15').key2]"
+        }
+      }
     }
   ]
 }
