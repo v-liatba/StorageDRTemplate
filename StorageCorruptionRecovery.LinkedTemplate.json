@@ -472,13 +472,13 @@
     },
     {
       "type": "Microsoft.Logic/workflows",
-      "apiVersion": "2017-07-01",
+      "apiVersion": "2016-06-01",
       "name": "[parameters('logicAppName')]",
       "location": "[resourceGroup().location]",
       "tags": {},
       "properties": {
         "definition": {
-          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2017-07-01/workflowdefinition.json#",
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
           "contentVersion": "1.0.0.0",
           "actions": {
             "For_each": {
