@@ -641,11 +641,7 @@
             "webHookProperties": {}
           }
         ]
-      },
-      "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat('Microsoft.Insights/actionGroups/', parameters('actionGroupName'))]"
-      ]
+      }
     }
   ]
 }
