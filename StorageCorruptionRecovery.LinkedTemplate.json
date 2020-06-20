@@ -111,6 +111,9 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
+        ],
+        "dependsOn": [
+          "[variables('backupStorageLink')]"
         ]
       }
     },
@@ -165,6 +168,9 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
+        ],
+        "dependsOn": [
+          "[variables('restoreStorageLink')]"
         ]
       }
     },
@@ -206,6 +212,9 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
+        ],
+        "dependsOn": [
+          "[variables('backupStorageLink')]"
         ]
       }
     },
@@ -251,6 +260,9 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
+        ],
+        "dependsOn": [
+          "[variables('restoreStorageLink')]"
         ]
       }
     },
@@ -296,9 +308,12 @@
               "timeout": "1.00:00:00"
             }
           }
+        ],
+        "dependsOn": [
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
-      }
-    },
+      },
     {
       "type": "Microsoft.DataFactory/factories/triggers",
       "apiVersion": "2018-06-01",
@@ -378,7 +393,11 @@
         ],
         "policy": {
           "timeout": "1.00:00:00"
-        }
+        },
+        "dependsOn": [
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        ]
       }
     },
     {
@@ -616,8 +635,7 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat('Microsoft.Insights/actionGroups/', parameters('actionGroupName'))]"
+        "[parameters('actionGroupName')]"
       ]
     }
   ]
