@@ -45,7 +45,10 @@
             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),';AccountKey=',listKeys(parameters('backupStorageId'), '2019-04-01').keys[0].value)]"
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[parameters('factoryId')]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/linkedServices",
@@ -59,7 +62,10 @@
             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[parameters('factoryId')]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -101,6 +107,7 @@
           }
         ],
         "dependsOn": [
+          "[parameters('factoryId')]",
           "[concat(parameters('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
@@ -159,6 +166,7 @@
         ]
       },
       "dependsOn": [
+        "[parameters('factoryId')]",
         "[concat(parameters('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
       ]
     },
@@ -202,6 +210,7 @@
           }
         ],
         "dependsOn": [
+          "[parameters('factoryId')]",
           "[concat(parameters('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
@@ -251,6 +260,7 @@
         ]
       },
       "dependsOn": [
+        "[parameters('factoryId')]",
         "[concat(parameters('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
       ]
     },
@@ -299,6 +309,7 @@
         ]
       },
       "dependsOn": [
+        "[parameters('factoryId')]",
         "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
         "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
@@ -384,6 +395,7 @@
           "timeout": "1.00:00:00"
         },
         "dependsOn": [
+          "[parameters('factoryId')]",
           "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
           "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
