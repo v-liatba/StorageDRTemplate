@@ -111,10 +111,6 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
-        ],
-        "dependsOn": [
-          "[variables('factoryId')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
@@ -170,11 +166,7 @@
             "type": "Guid"
           }
         ]
-      },
-      "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-      ]
+      }
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -214,10 +206,6 @@
             "name": "SubscriptionId",
             "type": "Guid"
           }
-        ],
-        "dependsOn": [
-          "[variables('factoryId')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
@@ -264,12 +252,7 @@
             "type": "Guid"
           }
         ]
-      },
-      "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-
-      ]
+      }
     },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
