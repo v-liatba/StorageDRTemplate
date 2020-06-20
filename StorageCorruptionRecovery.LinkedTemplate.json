@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "corruptionRecovery-df",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
