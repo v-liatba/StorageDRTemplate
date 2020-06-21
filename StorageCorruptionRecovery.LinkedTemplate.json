@@ -20,66 +20,63 @@
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
     "actionGroupShortName": { "type": "string" },
-    "factoryDeploymentTemplate": { "type": "string" },
-    "factoryName": { "type": "string" },
-    "factoryId": { "type": "string" }
+    "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
+    "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
     "restoreStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
     "backupStorageLink": "[concat(parameters('backupStorageName'),'_link')]",
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
     {
       "type": "Microsoft.DataFactory/factories",
       "apiVersion": "2018-06-01",
-      "name": "[parameters('factoryName')]",
-      "location": "East US",
-      "properties": {},
-      "resources": [
-        {
-          "type": "Microsoft.DataFactory/factories/linkedServices",
-          "apiVersion": "2018-06-01",
-          "name": "[concat(parameters('factoryName'),'/',variables('backupStorageLink'))]",
-          "properties": {
-            "type": "AzureTableStorage",
-            "typeProperties": {
-              "connectionString": {
-                "type": "SecureString",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),';AccountKey=',listKeys(parameters('backupStorageId'), '2019-04-01').keys[0].value)]"
-              }
-            }
-          },
-          "dependsOn": [
-            "[parameters('factoryId')]"
-          ]
-        },
-        {
-          "type": "Microsoft.DataFactory/factories/linkedServices",
-          "apiVersion": "2018-06-01",
-          "name": "[concat(parameters('factoryName'),'/',variables('restoreStorageLink'))]",
-          "properties": {
-            "type": "AzureStorage",
-            "typeProperties": {
-              "connectionString": {
-                "type": "SecureString",
-                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
-              }
-            }
-          },
-          "dependsOn": [
-            "[parameters('factoryId')]"
-          ]
+      "name": "[variables('factoryName')]",
+      "location": "East US"
+    },
+    {
+      "type": "Microsoft.DataFactory/factories/linkedServices",
+      "apiVersion": "2018-06-01",
+      "name": "[concat(variables('factoryName'),'/',variables('backupStorageLink'))]",
+      "properties": {
+        "type": "AzureTableStorage",
+        "typeProperties": {
+          "connectionString": {
+            "type": "SecureString",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('backupStorageName'),';AccountKey=',listKeys(parameters('backupStorageId'), '2019-04-01').keys[0].value)]"
+          }
         }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]"
+      ]
+    },
+    {
+      "type": "Microsoft.DataFactory/factories/linkedServices",
+      "apiVersion": "2018-06-01",
+      "name": "[concat(variables('factoryName'),'/',variables('restoreStorageLink'))]",
+      "properties": {
+        "type": "AzureStorage",
+        "typeProperties": {
+          "connectionString": {
+            "type": "SecureString",
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
+          }
+        }
+      },
+      "dependsOn": [
+        "[variables('factoryId')]"
       ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
       "copy": {
         "name": "datasetTableCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -116,15 +113,15 @@
           }
         ],
         "dependsOn": [
-          "[parameters('factoryId')]",
-          "[concat(parameters('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -139,7 +136,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "(parameters('backupStorageContainer'),'\\',parameters('backupAscTableNames')[copyIndex()].name\\@formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
+            "value": "(parameters('backupStorageContainer'),'\\',parameters('backupAscTableNames')[copyIndex()].name\\) @formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
           },
           "format": {
             "type": "JsonFormat"
@@ -174,14 +171,14 @@
         ]
       },
       "dependsOn": [
-        "[parameters('factoryId')]",
-        "[concat(parameters('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-      ]
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
       "copy": {
         "name": "datasetTableCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -218,15 +215,15 @@
           }
         ],
         "dependsOn": [
-          "[parameters('factoryId')]",
-          "[concat(parameters('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
+      "name": "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -268,15 +265,15 @@
         ]
       },
       "dependsOn": [
-        "[parameters('factoryId')]",
-        "[concat(parameters('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
 
       ]
     },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]",
+      "name": "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]",
       "copy": {
         "name": "backupPipelineCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -318,15 +315,15 @@
         ]
       },
       "dependsOn": [
-        "[parameters('factoryId')]",
-        "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
       "type": "Microsoft.DataFactory/factories/triggers",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,variables('backupPipelineTriggerName'))]",
+      "name": "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,variables('backupPipelineTriggerName'))]",
       "copy": {
         "name": "backupPipelineCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -350,13 +347,13 @@
         ]
       },
       "dependsOn": [
-        "[concat(parameters('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'), '/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]",
+      "name": "[concat(variables('factoryName'), '/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -404,16 +401,16 @@
           "timeout": "1.00:00:00"
         },
         "dependsOn": [
-          "[parameters('factoryId')]",
-          "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat(parameters('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
     {
       "type": "Microsoft.DataFactory/factories/triggers",
       "apiVersion": "2018-06-01",
-      "name": "[concat(parameters('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,variables('restorePipelineTriggerName'))]",
+      "name": "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,variables('restorePipelineTriggerName'))]",
       "copy": {
         "name": "datasetBlobCopy",
         "count": "[length(parameters('backupAscTableNames'))]"
@@ -437,7 +434,7 @@
         ]
       },
       "dependsOn": [
-        "[concat(parameters('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
     },
     {
