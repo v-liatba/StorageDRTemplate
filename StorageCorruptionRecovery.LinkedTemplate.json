@@ -73,7 +73,9 @@
           "dependsOn": [
             "[variables('factoryId')]"
           ]
-        },
+        }
+      ]
+    },
         {
           "type": "Microsoft.DataFactory/factories/datasets",
           "apiVersion": "2018-06-01",
@@ -437,9 +439,7 @@
           "dependsOn": [
             "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
           ]
-        }
-      ]
-    },
+        },
     {
       "type": "Microsoft.Insights/actionGroups",
       "apiVersion": "2018-03-01",
