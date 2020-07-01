@@ -597,7 +597,7 @@
         "severity": 3,
         "enabled": "true",
         "scopes": [
-          "[resourceId('Microsoft.DataFactory/datafactories', variables('factoryName'))]"
+          "[resourceId('Microsoft.DataFactory/factories', variables('factoryName'))]"
         ],
         "evaluationFrequency": "PT1M",
         "windowSize": "PT5M",
@@ -608,7 +608,7 @@
             {
               "threshold": 1,
               "name": "Metric1",
-              "metricNamespace": "Microsoft.DataFactory/dataFactories",
+              "metricNamespace": "Microsoft.DataFactory/factories",
               "metricName": "FailedRuns",
               "dimensions": [
                 {
@@ -645,6 +645,6 @@
         "[variables('factoryId')]",
         "[concat('Microsoft.Insights/actionGroups/', parameters('actionGroupName'))]"
       ]
-    }    
+    }
   ]
 }
