@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test1",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -171,9 +171,9 @@
         ]
       },
       "dependsOn": [
-          "[variables('factoryId')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
-        ]
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -215,8 +215,8 @@
           }
         ],
         "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
@@ -585,65 +585,6 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]"
-      ]
-    },
-        {
-      "type": "Microsoft.Insights/metricAlerts",
-      "apiVersion": "2018-03-01",
-      "name": "[parameters('alertRuleName')]",
-      "location": "global",
-      "properties": {
-        "description": "Failed to backup a storage table. This might be a problem in case of data corruption",
-        "severity": 3,
-        "enabled": "true",
-        "scopes": [
-          "[resourceId('Microsoft.DataFactory/datafactories', variables('factoryName'))]"
-        ],
-        "evaluationFrequency": "PT1M",
-        "windowSize": "PT5M",
-        "templateType": 8,
-        "templateSpecificParameters": {},
-        "criteria": {
-          "allOf": [
-            {
-              "threshold": 1,
-              "name": "Metric1",
-              "metricNamespace": "Microsoft.DataFactory/dataFactories",
-              "metricName": "FailedRuns",
-              "dimensions": [
-                {
-                  "name": "pipelineName",
-                  "operator": "Include",
-                  "values": [
-                    "*"
-                  ]
-                },
-                {
-                  "name": "activityName",
-                  "operator": "Include",
-                  "values": [
-                    "*"
-                  ]
-                }
-              ],
-              "operator": "GreaterThan",
-              "timeAggregation": "Total",
-              "monitorTemplateType": 8
-            }
-          ],
-          "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
-        },
-        "autoMitigate": true,
-        "actions": [
-          {
-            "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroupName'))]",
-            "webHookProperties": {}
-          }
-        ]
-      },
-      "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat('Microsoft.Insights/actionGroups/', parameters('actionGroupName'))]"
       ]
     }
   ]
