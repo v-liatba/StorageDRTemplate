@@ -55,7 +55,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[reference(resourceId('Microsoft.Storage/storageAccounts/', parameters('backupStorageName')),'2017-06-01')]"
+        "[concat(resourceId('Microsoft.Storage/storageAccounts/', parameters('backupStorageName')))]"
       ]
     },
     {
