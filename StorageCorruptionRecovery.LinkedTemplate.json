@@ -55,7 +55,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[parameters('backupStorageId')]"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('backupStorageName'))]"
       ]
     },
     {
@@ -74,7 +74,7 @@
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]",
-        "Microsoft.Storage/storageAccounts/globdev2ascbackup"
+        "[concat('Microsoft.Storage/storageAccounts/', parameters('restoreStorageName'))]"
       ]
     },
     {
