@@ -55,7 +55,6 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat(resourceId('Microsoft.Storage/storageAccounts/', parameters('backupStorageName')))]"
       ]
     },
     {
@@ -67,14 +66,13 @@
         "typeProperties": {
           "connectionString": {
             "type": "SecureString",
-            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(resourceId('Microsoft.Storage/storageAccounts',parameters('restoreStorageName')), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts',parameters('restoreStorageName')), '2019-04-01').keys [0].value)]"
           }
         }
       },
       "dependsOn": [
         "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]",
-        "[concat('Microsoft.Storage/storageAccounts/', parameters('restoreStorageName'))]"
       ]
     },
     {
