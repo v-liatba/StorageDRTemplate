@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test3",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer",
     "alertRuleName1": "Failed-DR-Backup-Alert"
   },
@@ -54,7 +54,7 @@
         }
       },
       "dependsOn": [
-        "[variables('factoryId')]",
+        "[variables('factoryId')]"
       ]
     },
     {
@@ -72,7 +72,7 @@
       },
       "dependsOn": [
         "[variables('factoryId')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
       ]
     },
     {
@@ -588,6 +588,32 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]"
       ]
+    },
+      ],
+  "outputs": {
+    "out1": {
+      "type": "string",
+      "value": "[variables('factoryName')]"
+    },
+    "out2": {
+      "type": "string",
+      "value": "[parameters('backupStorageName')]"
+    },
+    "out3": {
+      "type": "string",
+      "value": "[parameters('datasetName')]"
+    },
+    "out4": {
+      "type": "string",
+      "value": "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+    },
+    "out5": {
+      "type": "string",
+      "value": "[parameters('datasetName')]"
+    },
+    "out6": {
+      "type": "string",
+      "value": "[parameters('restorePipelineName')]"
     }
-  ]
+  }
 }
