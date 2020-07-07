@@ -23,12 +23,13 @@
     "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
+    "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
     "restoreStorageId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('restoreStorageName'))]",
     "backupStorageLink": "[concat(parameters('backupStorageName'),'_link')]",
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test5",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -52,7 +53,7 @@
         }
       },
       "dependsOn": [
-        "[variables('factoryName')]"
+        "[variables('factoryId')]"
       ]
     },
     {
@@ -69,7 +70,7 @@
         }
       },
       "dependsOn": [
-        "[variables('factoryName')]"
+        "[variables('factoryId')]"
       ]
     },
     {
@@ -112,8 +113,8 @@
           }
         ],
         "dependsOn": [
-          "[variables('factoryName')]",
-          "[concat(variables('factoryName'),'/',variables('backupStorageLink'))]"
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
@@ -170,9 +171,9 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
-        "[concat(variables('factoryName'),'/',variables('restoreStorageLink'))]"
-      ]
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -214,8 +215,8 @@
           }
         ],
         "dependsOn": [
-          "[variables('factoryName')]",
-          "[concat(variables('factoryName'),'/',variables('backupStorageLink'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
         ]
       }
     },
@@ -264,8 +265,8 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
-        "[concat(variables('factoryName'),'/',variables('restoreStorageLink'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
 
       ]
     },
@@ -314,9 +315,9 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
-        "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[variables('factoryId')]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
@@ -346,7 +347,7 @@
         ]
       },
       "dependsOn": [
-        "[concat(variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
     {
@@ -400,9 +401,9 @@
           "timeout": "1.00:00:00"
         },
         "dependsOn": [
-          "[variables('factoryName')]",
-          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[variables('factoryId')]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
@@ -433,7 +434,7 @@
         ]
       },
       "dependsOn": [
-        "[concat(variables('factoryName'), '/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
     },
     {
@@ -583,66 +584,7 @@
         }
       },
       "dependsOn": [
-        "[parameters('webApiConnectionName')]"
-      ]
-    },
-    {
-      "type": "Microsoft.Insights/metricAlerts",
-      "apiVersion": "2018-03-01",
-      "name": "[parameters('alertRuleName')]",
-      "location": "global",
-      "properties": {
-        "description": "Failed to backup a storage table. This might be a problem in case of data corruption",
-        "severity": 3,
-        "enabled": "true",
-        "scopes": [
-          "[resourceId('Microsoft.DataFactory/factories', variables('factoryName'))]"
-        ],
-        "evaluationFrequency": "PT1M",
-        "windowSize": "PT5M",
-        "templateType": 8,
-        "templateSpecificParameters": {},
-        "criteria": {
-          "allOf": [
-            {
-              "threshold": 1,
-              "name": "Metric1",
-              "metricNamespace": "Microsoft.DataFactory/factories",
-              "metricName": "PipelineFailedRuns",
-              "dimensions": [
-                {
-                  "name": "pipelineName",
-                  "operator": "Include",
-                  "values": [
-                    "*"
-                  ]
-                },
-                {
-                  "name": "activityName",
-                  "operator": "Include",
-                  "values": [
-                    "*"
-                  ]
-                }
-              ],
-              "operator": "GreaterThan",
-              "timeAggregation": "Total",
-              "monitorTemplateType": 8
-            }
-          ],
-          "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
-        },
-        "autoMitigate": true,
-        "actions": [
-          {
-            "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroupName'))]",
-            "webHookProperties": {}
-          }
-        ]
-      },
-      "dependsOn": [
-        "[variables('factoryName')]",
-        "[parameters('actionGroupName')]"
+        "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]"
       ]
     }
   ]
