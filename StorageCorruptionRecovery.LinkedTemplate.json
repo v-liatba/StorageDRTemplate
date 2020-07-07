@@ -29,8 +29,7 @@
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
     "factoryName": "storageDataFactoryV2-test5",
-    "restoreStorageContainer": "restoreContainer",
-    "alertRuleName1": "Failed-DR-Backup-Alert"
+    "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
     {
@@ -65,7 +64,7 @@
         "typeProperties": {
           "connectionString": {
             "type": "SecureString",
-            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(resourceId('Microsoft.Storage/storageAccounts',parameters('restoreStorageName')), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts',parameters('restoreStorageName')), '2019-04-01').keys [0].value)]"
+            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('restoreStorageName'),';BlobEndpoint=', reference(variables('restoreStorageId'), '2019-04-01').primaryEndpoints.blob,';AccountKey=',listKeys(variables('restoreStorageId'), '2019-04-01').keys [0].value)]"
           }
         }
       },
@@ -402,8 +401,8 @@
         },
         "dependsOn": [
           "[variables('factoryName')]",
-          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat(variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
@@ -584,7 +583,66 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/connections', parameters('webApiConnectionName'))]"
+        "[parameters('webApiConnectionName')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Insights/metricAlerts",
+      "apiVersion": "2018-03-01",
+      "name": "[parameters('alertRuleName')]",
+      "location": "global",
+      "properties": {
+        "description": "Failed to backup a storage table. This might be a problem in case of data corruption",
+        "severity": 3,
+        "enabled": "true",
+        "scopes": [
+          "[resourceId('Microsoft.DataFactory/factories', variables('factoryName'))]"
+        ],
+        "evaluationFrequency": "PT1M",
+        "windowSize": "PT5M",
+        "templateType": 8,
+        "templateSpecificParameters": {},
+        "criteria": {
+          "allOf": [
+            {
+              "threshold": 1,
+              "name": "Metric1",
+              "metricNamespace": "Microsoft.DataFactory/factories",
+              "metricName": "PipelineFailedRuns",
+              "dimensions": [
+                {
+                  "name": "pipelineName",
+                  "operator": "Include",
+                  "values": [
+                    "*"
+                  ]
+                },
+                {
+                  "name": "activityName",
+                  "operator": "Include",
+                  "values": [
+                    "*"
+                  ]
+                }
+              ],
+              "operator": "GreaterThan",
+              "timeAggregation": "Total",
+              "monitorTemplateType": 8
+            }
+          ],
+          "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+        },
+        "autoMitigate": true,
+        "actions": [
+          {
+            "actionGroupId": "[resourceId('microsoft.insights/actionGroups', parameters('actionGroupName'))]",
+            "webHookProperties": {}
+          }
+        ]
+      },
+      "dependsOn": [
+        "[variables('factoryName')]",
+        "[parameters('actionGroupName')]"
       ]
     }
   ]
