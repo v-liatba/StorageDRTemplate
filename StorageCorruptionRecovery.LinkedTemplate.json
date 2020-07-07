@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2",
+    "factoryName": "storageDataFactoryV2-test5",
     "restoreStorageContainer": "restoreContainer",
     "alertRuleName1": "Failed-DR-Backup-Alert"
   },
