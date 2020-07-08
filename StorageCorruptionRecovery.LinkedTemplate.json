@@ -127,7 +127,7 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "AzureBlob",
+        "type": "AzureBlob",resourceid
         "linkedServiceName": {
           "type": "LinkedServiceReference",
           "referenceName": "[variables('restoreStorageLink')]"
@@ -136,7 +136,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "(parameters('backupStorageContainer'),'\\',parameters('backupAscTableNames')[copyIndex()].name\\) @formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
+            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]"
           },
           "format": {
             "type": "JsonFormat"
