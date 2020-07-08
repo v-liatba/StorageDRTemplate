@@ -127,7 +127,7 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "AzureBlob",resourceid
+        "type": "AzureBlob",
         "linkedServiceName": {
           "type": "LinkedServiceReference",
           "referenceName": "[variables('restoreStorageLink')]"
