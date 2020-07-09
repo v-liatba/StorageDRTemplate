@@ -291,6 +291,7 @@
               "enableStaging": false,
               "sink": {
                 "type": "BlobSink",
+                "copyBehavior": "PreserveHierarchy",
                 "writeBatchSize": 0,
                 "writeBatchTimeout": "00:00:00"
               },
@@ -323,8 +324,35 @@
             ],
             "policy": {
               "timeout": "1.00:00:00"
+            },
+            "typeProperties": {
+              "referenceObjects": {
+                "linkedServices": [
+                  {
+                    "referenceName": "[variables('restoreStorageLink')]",
+                    "type": "LinkedServiceReference",
+                    "parameters": {
+                    }
+                  }
+                ],
+                "datasets": [
+                  {
+                    "referenceName": "[variables('restoreStorageLink')]",
+                    "type": "DatasetReference",
+                    "parameters": {
+                      "WindowStartTime": {
+                        "value": "@pipeline().parameters.WindowStartTime",
+                        "type": "Expression"
+                      },
+                      "WindowEndTime": {
+                        "value": "@pipeline().parameters.windowEndTime",
+                        "type": "Expression"
+                      }
+                    }
+                  }
+                ]
+              }
             }
-          }
         ],
         "parameters": {
           "WindowStartTime": {
