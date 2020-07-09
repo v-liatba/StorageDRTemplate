@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test6",
+    "factoryName": "storageDataFactoryV2-test5",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -144,7 +144,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "@[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)], @formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
+            "value": "@[concat(variables('globalMainStorageBackupContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name, /@formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')",
           },
           "format": {
             "type": "JsonFormat"
@@ -311,7 +311,7 @@
                 "type": "DatasetReference",
                 "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
                 "parameters": {
-                   "WindowStartTime": {
+                  "WindowStartTime": {
                     "value": "@trigger().parameters.WindowStartTime",
                     "type": "Expression"
                   },
@@ -366,13 +366,13 @@
             "pipelineReference": {
               "type": "PipelineReference",
               "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+            },
+            "parameters": {
+              "WindowStartTime": "@trigger().outputs.windowStartTime",
+              "WindowEndTime": "@trigger().outputs.windowEndTime"
             }
           }
-        ],
-        "parameters": {
-          "WindowStartTime": "@trigger().outputs.windowStartTime",
-          "WindowEndTime": "@trigger().outputs.windowEndTime"
-        }
+        ]
       },
       "dependsOn": [
         "[variables('factoryName')]",
