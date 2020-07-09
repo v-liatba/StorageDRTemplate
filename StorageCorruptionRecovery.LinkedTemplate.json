@@ -144,7 +144,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "@[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)], @formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
+            "value": "@[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)], @@formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
           },
           "format": {
             "type": "JsonFormat"
@@ -325,48 +325,21 @@
             "policy": {
               "timeout": "1.00:00:00"
             },
-            "typeProperties": {
-              "referenceObjects": {
-                "linkedServices": [
-                  {
-                    "referenceName": "[variables('restoreStorageLink')]",
-                    "type": "LinkedServiceReference",
-                    "parameters": {
-                    }
-                  }
-                ],
-                "datasets": [
-                  {
-                    "referenceName": "[variables('restoreStorageLink')]",
-                    "type": "DatasetReference",
-                    "parameters": {
-                      "WindowStartTime": {
-                        "value": "@pipeline().parameters.WindowStartTime",
-                        "type": "Expression"
-                      },
-                      "WindowEndTime": {
-                        "value": "@pipeline().parameters.windowEndTime",
-                        "type": "Expression"
-                      }
-                    }
-                  }
-                ]
+            "parameters": {
+              "WindowStartTime": {
+                "type": "string",
+                "defaultValue": "2020-07-01T13:00:00Z"
+              },
+              "WindowEndTime": {
+                "type": "string",
+                "defaultValue": "2020-07-01T13:15:00Z"
               }
             }
-        ],
-        "parameters": {
-          "WindowStartTime": {
-            "type": "string",
-            "defaultValue": "2020-07-01T13:00:00Z"
-          },
-          "WindowEndTime": {
-            "type": "string",
-            "defaultValue": "2020-07-01T13:15:00Z"
           }
-        }
+        ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
+        "[variables('factoryId')]",
         "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
         "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
@@ -401,11 +374,11 @@
           "WindowEndTime": "@trigger().outputs.windowEndTime"
         }
       },
-        "dependsOn": [
-          "[variables('factoryName')]",
-          "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
-        ]
-      },
+      "dependsOn": [
+        "[variables('factoryName')]",
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+      ]
+    },
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
       "apiVersion": "2018-06-01",
