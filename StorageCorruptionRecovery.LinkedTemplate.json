@@ -377,6 +377,7 @@
                 "value": "@{concat('output',formatDateTime(trigger().outputs.windowEndTime,'yyyy/MM/dd/HH/'))}"
               }
             }
+          }
         ]
       },
       "dependsOn": [
