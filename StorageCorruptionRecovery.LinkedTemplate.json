@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test5",
+    "factoryName": "storageDataFactoryV2",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -144,7 +144,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-             "value": "concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name), formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
+            "value": "concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name), formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')"
           },
           "format": {
             "type": "JsonFormat"
