@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2",
+    "factoryName": "storageDataFactoryV2-test5",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -368,12 +368,8 @@
               "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
             },
             "parameters": {
-              "windowStartTime": {
-                "type": "string"
-              },
-              "windowEndTime": {
-                "type": "string"
-              }
+              "windowStartTime": "@trigger().outputs.windowStartTime",
+              "windowEndTime": "@trigger().outputs.windowEndTime"
             }
           }
         ]
