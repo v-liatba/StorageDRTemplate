@@ -21,7 +21,8 @@
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
     "actionGroupShortName": { "type": "string" },
-    "factoryDeploymentTemplate": { "type": "string" }
+    "factoryDeploymentTemplate": { "type": "string" },
+    "singleQuote": "'"
   },
   "variables": {
     "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
@@ -144,7 +145,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]@{formatDateTime(dataset().WindowStartTime, 'yyyy/MM/dd/HH/')}"
+            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]@{formatDateTime(dataset().WindowStartTime,,', variable("singlequote"), 'yyyy/MM/dd/HH/',variable("singlequote"), ')}"
           },
           "format": {
             "type": "JsonFormat"
