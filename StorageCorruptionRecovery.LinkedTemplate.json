@@ -145,7 +145,7 @@
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]@{formatDateTime(dataset().WindowStartTime,,', variable("singlequote"), 'yyyy/MM/dd/HH/',variable("singlequote"), ')}"
+            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]@{formatDateTime(dataset().WindowStartTime,', variable("singlequote"), 'yyyy/MM/dd/HH/',variable("singlequote"), ')}"
           },
           "format": {
             "type": "JsonFormat"
