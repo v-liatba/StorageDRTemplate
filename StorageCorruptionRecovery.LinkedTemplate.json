@@ -21,8 +21,7 @@
     "alertRuleName": { "type": "string" },
     "actionGroupName": { "type": "string" },
     "actionGroupShortName": { "type": "string" },
-    "factoryDeploymentTemplate": { "type": "string" },
-    "singleQuote": "'"
+    "factoryDeploymentTemplate": { "type": "string" }
   },
   "variables": {
     "factoryId": "[concat('Microsoft.DataFactory/factories/', variables('factoryName'))]",
@@ -31,7 +30,8 @@
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
     "factoryName": "storageDataFactoryV2-test5",
-    "restoreStorageContainer": "restoreContainer"
+    "restoreStorageContainer": "restoreContainer",
+    "singleQuote": "'"
   },
   "resources": [
     {
