@@ -312,11 +312,11 @@
                 "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
                 "parameters": {
                   "WindowStartTime": {
-                    "value": "@trigger().outputs.WindowStartTime",
+                    "value": "@pipeline().TriggerTime",
                     "type": "Expression"
                   },
                   "WindowEndTime": {
-                    "value": "@trigger().outputs.WindowEndTime",
+                    "value": "@pipeline().TriggerTime",
                     "type": "Expression"
                   }
                 }
