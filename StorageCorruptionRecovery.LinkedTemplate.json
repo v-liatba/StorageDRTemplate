@@ -128,7 +128,7 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "AzureBlob",
+        "type": "Json",
         "linkedServiceName": {
           "type": "LinkedServiceReference",
           "referenceName": "[variables('restoreStorageLink')]"
@@ -142,13 +142,14 @@
           }
         },
         "typeProperties": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
           "fileName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_backup.json')]",
           "folderPath": {
             "type": "Expression",
-            "value": "[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)],'@{formatDateTime(dataset().WindowStartTime', variables('singleQuote'),'yyyy/MM/dd/HH/',variable('singlequote'))}'"
+            "value": "@{formatDateTime(dataset().WindowStartTime,'yyyy/MM/dd/HH/')}"
           },
-          "format": {
-            "type": "JsonFormat"
+          "container":"[concat(parameters('backupStorageContainer'),'/',parameters('backupAscTableNames')[copyIndex()].name)]"
           }
         },
         "structure": [
