@@ -314,8 +314,7 @@
                 "parameters": {
                   "WindowStartTime": {
                     "value": "@pipeline().TriggerTime",
-                    "type": "
-                    "
+                    "type": "Expression"
                   },
                   "WindowEndTime": {
                     "value": "@pipeline().TriggerTime",
