@@ -478,7 +478,7 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "ScheduleTrigger",
+        "type": "TumblingWindowTrigger",
         "typeProperties": {
           "endTime": "2121-07-01T13:38:49.2603387Z",
           "frequency": "Hour",
@@ -493,8 +493,8 @@
               "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
             },
             "parameters": {
-              "windowStartTime": "@trigger().outputs.windowStartTime",
-              "windowEndTime": "@trigger().outputs.windowEndTime"
+              "windowStartTime": "@trigger().inputs.windowStartTime",
+              "windowEndTime": "@trigger().inputs.windowEndTime"
             }
           }
         ]
