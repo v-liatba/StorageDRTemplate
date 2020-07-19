@@ -480,11 +480,11 @@
       "properties": {
         "type": "TumblingWindowTrigger",
         "typeProperties": {
-          "endTime": "2120-07-01T13:02:46.7695857Z",
+          "endTime": "2121-07-01T13:38:49.2603387Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
-          "startTime": "2020-07-01T13:02:46.7695857Z"
+          "startTime": "2020-07-01T13:38:49.2603387Z"
         },
         "pipelines": [
           {
