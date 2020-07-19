@@ -478,7 +478,7 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "TumblingWindowTrigger",
+        "type": "ScheduleTrigger",
         "typeProperties": {
           "endTime": "2121-06-13T13:38:49.2603387Z",
           "frequency": "Hour",
