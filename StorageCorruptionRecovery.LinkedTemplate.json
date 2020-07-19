@@ -368,11 +368,11 @@
       "properties": {
         "type": "TumblingWindowTrigger",
         "typeProperties": {
-          "endTime": "2121-06-13T13:38:49.2603387Z",
+          "endTime": "2121-07-01T13:38:49.2603387Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
-          "startTime": "2020-06-13T13:38:49.2603387Z"
+          "startTime": "2020-07-01T13:38:49.2603387Z"
         },
         "pipelines": [
           {
@@ -428,13 +428,7 @@
             "inputs": [
               {
                 "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
-              }
-            ],
-            "outputs": [
-              {
-                "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
                 "parameters": {
                   "WindowStartTime": {
                     "value": "@pipeline().TriggerTime",
@@ -445,6 +439,12 @@
                     "type": "Expression"
                   }
                 }
+              }
+            ],
+            "outputs": [
+              {
+                "type": "DatasetReference",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
               }
             ]
           }
@@ -478,13 +478,13 @@
         "count": "[length(parameters('backupAscTableNames'))]"
       },
       "properties": {
-        "type": "ScheduleTrigger",
+        "type": "TumblingWindowTrigger",
         "typeProperties": {
-          "endTime": "2121-06-13T13:38:49.2603387Z",
+          "endTime": "2121-07-01T13:38:49.2603387Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
-          "startTime": "2020-06-13T13:38:49.2603387Z"
+          "startTime": "2020-07-01T13:38:49.2603387Z"
         },
         "pipelines": [
           {
