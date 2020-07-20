@@ -30,8 +30,7 @@
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
     "factoryName": "storageDataFactoryV2-test5",
-    "restoreStorageContainer": "restoreContainer",
-    "singleQuote": "'"
+    "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
     {
@@ -419,13 +418,13 @@
             "inputs": [
               {
                 "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
               }
             ],
             "outputs": [
               {
                 "type": "DatasetReference",
-                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+                "referenceName": "[concat(parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]"
               }
             ]
           }
