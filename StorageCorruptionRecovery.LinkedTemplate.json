@@ -358,11 +358,11 @@
       "properties": {
         "type": "TumblingWindowTrigger",
         "typeProperties": {
-          "endTime": "2121-07-01T13:38:49.2603387Z",
+          "endTime": "2121-06-13T13:38:49.2603387Z",
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
-          "startTime": "2020-07-01T13:38:49.2603387Z"
+          "startTime": "2020-06-13T13:38:49.2603387Z"
         },
         "pipelines": [
           {
