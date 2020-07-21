@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test7",
+    "factoryName": "storageDataFactoryV2-test8",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -114,7 +114,7 @@
         ],
         "dependsOn": [
           "[variables('factoryName')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+          "[resourceId('Microsoft.DataFactory/factories/linkedServices', variables('factoryName'), variables('backupStorageLink'))]"
         ]
       }
     },
@@ -176,7 +176,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        "[resourceId('Microsoft.DataFactory/factories/linkedServices', variables('factoryName'), variables('restoreStorageLink'))]"
       ]
     },
     {
@@ -220,7 +220,7 @@
         ],
         "dependsOn": [
           "[variables('factoryName')]",
-          "[concat(variables('factoryId'), '/linkedServices/',variables('backupStorageLink'))]"
+          "[resourceId('Microsoft.DataFactory/factories/linkedServices', variables('factoryName'), variables('backupStorageLink'))]"
         ]
       }
     },
@@ -270,7 +270,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat(variables('factoryId'), '/linkedServices/',variables('restoreStorageLink'))]"
+        "[resourceId('Microsoft.DataFactory/factories/linkedServices', variables('factoryName'), variables('restoreStorageLink'))]"
 
       ]
     },
@@ -340,9 +340,9 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryId')]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[variables('factoryName')]",
+        "[resourceId('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[resourceId('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
@@ -376,7 +376,7 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
+        "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
@@ -431,9 +431,9 @@
           "timeout": "1.00:00:00"
         },
         "dependsOn": [
-          "[variables('factoryName')]",
-          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat(variables('factoryId'),'/datasets/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[variables('factoryId')]",
+          "[resourceId('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[resourceId('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
@@ -464,7 +464,7 @@
         ]
       },
       "dependsOn": [
-        "[variables('factoryName')]",
+        "[variables('factoryId')]",
         "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
     },
