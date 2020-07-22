@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test7",
+    "factoryName": "storageDataFactoryV2-test8",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
