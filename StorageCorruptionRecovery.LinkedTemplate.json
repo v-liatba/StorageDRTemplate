@@ -377,7 +377,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat('Microsoft.DataFactory/factories/pipelines', variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
     {
@@ -465,7 +465,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[resourceId('Microsoft.DataFactory/factories/pipelines/', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
+        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
     },
     {
