@@ -29,7 +29,7 @@
     "restoreStorageLink": "[concat(parameters('restoreStorageName'),'_link')]",
     "backupPipelineTriggerName": "backup_pipeline_Trigger",
     "restorePipelineTriggerName": "restore_pipeline_Trigger",
-    "factoryName": "storageDataFactoryV2-test8",
+    "factoryName": "storageDataFactoryV2-test7",
     "restoreStorageContainer": "restoreContainer"
   },
   "resources": [
@@ -341,8 +341,8 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-        "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+        "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_backupInput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+        "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'),'/',parameters('backupAscTableNames')[copyIndex()].name, '_backupOutput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
       ]
     },
     {
@@ -377,7 +377,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+        "[concat('Microsoft.DataFactory/factories/pipelines', variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
     {
@@ -432,8 +432,8 @@
         },
         "dependsOn": [
           "[variables('factoryName')]",
-          "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
-          "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
+          "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreOutput_', parameters('backupStorageName'), '_', parameters('datasetName'))]",
+          "[concat('Microsoft.DataFactory/factories/datasets', variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name, '_restoreInput_', parameters('restoreStorageName'), '_', parameters('blobDatasetName'))]"
         ]
       }
     },
@@ -465,7 +465,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[concat(variables('factoryId'), '/pipelines/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
+        "[resourceId('Microsoft.DataFactory/factories/pipelines/', variables('factoryName'),'/', parameters('backupAscTableNames')[copyIndex()].name,parameters('restorePipelineName'))]"
       ]
     },
     {
