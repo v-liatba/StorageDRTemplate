@@ -377,7 +377,7 @@
       },
       "dependsOn": [
         "[variables('factoryName')]",
-        "[resourceId('Microsoft.DataFactory/factories/pipelines/', variables('factoryName'), parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
+        "[concat('Microsoft.DataFactory/factories/pipelines', variables('factoryName'), '/',parameters('backupAscTableNames')[copyIndex()].name,parameters('backupPipelineName'))]"
       ]
     },
     {
