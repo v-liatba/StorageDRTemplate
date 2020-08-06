@@ -369,7 +369,8 @@
           "frequency": "Hour",
           "interval": 1,
           "maxConcurrency": 1,
-          "startTime": "2020-06-13T13:38:49.2603387Z"
+          "startTime": "2020-06-13T13:38:49.2603387Z",
+          "runtimeState": "Started"
         },
         "pipelines": [
           {
